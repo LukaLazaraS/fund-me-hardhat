@@ -1,6 +1,7 @@
 {
   "devDependencies": {
-    "@nomicfoundation/hardhat-toolbox": "^2.0.2",
+    "@chainlink/contracts": "^0.5.1",
+    "@nomicfoundation/hardhat-toolbox": "^1.0.2",
     "@nomiclabs/hardhat-solhint": "^3.0.0",
     "hardhat": "^2.13.0",
     "ts-node": "^10.9.1",
