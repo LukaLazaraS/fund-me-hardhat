@@ -3,8 +3,11 @@ import "@nomicfoundation/hardhat-toolbox";
 import "@nomiclabs/hardhat-solhint";
 import "hardhat-deploy";
 
-const config: HardhatUserConfig = {
+module.exports = {
   solidity: "0.8.18",
+  namedAccounts: {
+    deployer: {
+      default: 0,
+    },
+  },
 };
-
-export default config;
