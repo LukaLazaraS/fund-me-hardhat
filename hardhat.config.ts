@@ -1,6 +1,6 @@
-import { HardhatUserConfig } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
 import "@nomiclabs/hardhat-solhint";
+import "dotenv/config";
 import "hardhat-deploy";
 
 const GOERLY_RPC_URL = process.env.GOERLY_RPC_URL!;
