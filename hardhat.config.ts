@@ -8,6 +8,7 @@ const PRIVATE_KEY = process.env.PRIVATE_KEY!;
 
 module.exports = {
   solidity: "0.8.18",
+  defaultNetwork: "hardhat",
   networks: {
     localhost: {
       url: "http://127.0.0.1:8545/",
