@@ -1,5 +1,5 @@
 import { HardhatRuntimeEnvironment } from "hardhat/types";
-import { networkConfig } from "../helper-hardhat-config";
+import { developmentChains, networkConfig } from "../helper-hardhat-config";
 
 module.exports = async (hre: HardhatRuntimeEnvironment) => {
   const { deployments, getNamedAccounts, network } = hre;
@@ -8,11 +8,21 @@ module.exports = async (hre: HardhatRuntimeEnvironment) => {
   const chainId = network.config.chainId!;
   const chainName = network.name!;
 
-  const ethUsdPriceFeedAddress = networkConfig[chainName].ethUsdPriceFeed!;
+  let ethUsdPriceFeedAddress: string;
+  if (developmentChains.includes(chainName)) {
+    const ethUsdAggregator = await deployments.get("MockV3Aggregator");
+    ethUsdPriceFeedAddress = ethUsdAggregator.address;
+  } else {
+    ethUsdPriceFeedAddress = networkConfig[chainName].ethUsdPriceFeed!;
+  }
 
   const fundMe = await deploy("FundMe", {
     from: deployer,
-    args: [],
+    args: [ethUsdPriceFeedAddress],
     log: true,
   });
+
+  log("-------------------------------------------------");
 };
+
+module.exports.tags = ["all", "fundme"];

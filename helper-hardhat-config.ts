@@ -12,3 +12,8 @@ export const networkConfig: networkConfigInfo = {
     ethUsdPriceFeed: "0x694AA1769357215DE4FAC081bf1f309aDC325306",
   },
 };
+
+export const developmentChains = ["hardhat", "localhost"];
+
+export const DECIMALS = "18";
+export const INITIAL_PRICE = "2000000000000000000000"; // 2000
