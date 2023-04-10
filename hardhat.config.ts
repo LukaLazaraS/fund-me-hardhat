@@ -7,7 +7,9 @@ const GOERLY_RPC_URL = process.env.GOERLY_RPC_URL!;
 const PRIVATE_KEY = process.env.PRIVATE_KEY!;
 
 module.exports = {
-  solidity: "0.8.18",
+  solidity: {
+    compilers: [{ version: "0.8.8" }, { version: "0.6.6" }],
+  },
   defaultNetwork: "hardhat",
   networks: {
     localhost: {
