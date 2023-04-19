@@ -7,7 +7,11 @@ export async function verify(contractAddress: string, args: any[]) {
       address: contractAddress,
       constuctorArguments: args,
     });
-  } catch (e: unknown) {
-    console.log(e);
+  } catch (e: any) {
+    if (e.message.toLowerCase().includes("already verified")) {
+      console.log("Already verified!");
+    } else {
+      console.log(e);
+    }
   }
 }

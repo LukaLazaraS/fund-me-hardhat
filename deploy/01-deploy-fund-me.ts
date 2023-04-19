@@ -10,17 +10,20 @@ module.exports = async (hre: HardhatRuntimeEnvironment) => {
   const chainName = network.name!;
 
   let ethUsdPriceFeedAddress: string;
+  let blockConfirmations: number = 0;
   if (developmentChains.includes(chainName)) {
     const ethUsdAggregator = await deployments.get("MockV3Aggregator");
     ethUsdPriceFeedAddress = ethUsdAggregator.address;
   } else {
     ethUsdPriceFeedAddress = networkConfig[chainName].ethUsdPriceFeed!;
+    blockConfirmations = networkConfig[network.name].blockConfirmations!;
   }
 
   const fundMe = await deploy("FundMe", {
     from: deployer,
     args: [ethUsdPriceFeedAddress],
     log: true,
+    waitConfirmations: blockConfirmations,
   });
 
   if (!developmentChains.includes(chainName) && process.env.ETHERSCAN_API_KEY) {
