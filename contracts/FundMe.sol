@@ -15,7 +15,7 @@ error FundMe__NotOwner();
 //Contract
 /**NatSpec Format example for contract
  * @title A sample Funding Contract
- * @author Patrick Collins
+ * @author Luka Lazarashvili
  * @notice This contract is for creating a sample funding contract
  * @dev This implements price feeds as our library
  */
