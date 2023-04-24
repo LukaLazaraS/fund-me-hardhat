@@ -69,5 +69,41 @@ describe("FundME", function () {
       assert.equal(endingFundMeBalance.toString(), "0");
       assert.equal(startingFundMeBalance.add(startingDeployerBalance).toString(), endingDeployerBalance.add(gasCost).toString());
     });
+    it("is allows us to withdraw with multiple funders", async () => {
+      // Arrange
+      const accounts = await ethers.getSigners();
+      for (let i = 1; i < 6; i++) {
+        const fundMeConnectedContract = await fundMe.connect(accounts[i]);
+        await fundMeConnectedContract.fund({ value: ethers.utils.parseEther("1") });
+      }
+      const startingFundMeBalance = await fundMe.provider.getBalance(fundMe.address);
+      const startingDeployerBalance = await fundMe.provider.getBalance(deployer.address);
+
+      // Act
+      const transactionResponse = await fundMe.withdraw();
+      const transactionReceipt = await transactionResponse.wait();
+      const { gasUsed, effectiveGasPrice } = transactionReceipt;
+      const withdrawGasCost = gasUsed.mul(effectiveGasPrice);
+      console.log(`GasCost: ${withdrawGasCost}`);
+      console.log(`GasUsed: ${gasUsed}`);
+      console.log(`GasPrice: ${effectiveGasPrice}`);
+      const endingFundMeBalance = await fundMe.provider.getBalance(fundMe.address);
+      const endingDeployerBalance = await fundMe.provider.getBalance(deployer.address);
+      // Assert
+      assert.equal(startingFundMeBalance.add(startingDeployerBalance).toString(), endingDeployerBalance.add(withdrawGasCost).toString());
+      // Make a getter for storage variables
+      await expect(fundMe.funders(0)).to.be.reverted;
+
+      for (let i = 1; i < 6; i++) {
+        const addressToAmountFundedResponse = await fundMe.addressToAmountFunded(accounts[i].address);
+        assert.equal(addressToAmountFundedResponse.toString(), "0");
+      }
+    });
+    it("Only allows the owner to withdraw", async function () {
+      const accounts = await ethers.getSigners();
+      const fundMeConnectedContract = await fundMe.connect(accounts[1]);
+      // await expect(fundMeConnectedContract.withdraw()).to.be.revertedWith("FundMe__NotOwner");
+      await expect(fundMeConnectedContract.withdraw()).to.be.reverted;
+    });
   });
 });
