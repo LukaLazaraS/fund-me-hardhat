@@ -24,11 +24,11 @@ contract FundMe {
     using PriceConverter for uint256;
 
     // State variables
-    mapping(address => uint256) public s_addressToAmountFunded;
-    address[] public s_funders;
-    address public immutable i_owner;
+    mapping(address => uint256) private s_addressToAmountFunded;
+    address[] private s_funders;
+    address private immutable i_owner;
     uint256 public constant MINIMUM_USD = 50 * 10 ** 18;
-    AggregatorV3Interface public s_priceFeed;
+    AggregatorV3Interface private s_priceFeed;
 
     //Events
 
@@ -71,11 +71,6 @@ contract FundMe {
         s_funders.push(msg.sender);
     }
 
-    function getVersion() public view returns (uint256) {
-        // ETH/USD price feed address of Sepolia Network.
-        return s_priceFeed.version();
-    }
-
     function withdraw() public onlyOwner {
         // for (
         //     uint256 funderIndex = 0;
@@ -103,5 +98,27 @@ contract FundMe {
             value: address(this).balance
         }("");
         require(callSuccess, "Call failed");
+    }
+
+    function getAddressToAmountFunded(
+        address fundingAddress
+    ) public view returns (uint256) {
+        return s_addressToAmountFunded[fundingAddress];
+    }
+
+    function getVersion() public view returns (uint256) {
+        return s_priceFeed.version();
+    }
+
+    function getFunder(uint256 index) public view returns (address) {
+        return s_funders[index];
+    }
+
+    function getOwner() public view returns (address) {
+        return i_owner;
+    }
+
+    function getPriceFeed() public view returns (AggregatorV3Interface) {
+        return s_priceFeed;
     }
 }
