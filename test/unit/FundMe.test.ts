@@ -19,7 +19,7 @@ describe("FundME", function () {
 
   describe("constructor", function () {
     it("sets the aggregator addresses correctly", async () => {
-      const response = await fundMe.priceFeed();
+      const response = await fundMe.s_priceFeed();
       assert.equal(response, mockV3Aggregator.address);
     });
   });
@@ -35,13 +35,13 @@ describe("FundME", function () {
     // but this is good enough for now
     it("Updates the amount funded data structure", async () => {
       await fundMe.fund({ value: ethers.utils.parseEther("1") });
-      const response = await fundMe.addressToAmountFunded(deployer.address);
+      const response = await fundMe.s_addressToAmountFunded(deployer.address);
       assert.equal(response.toString(), ethers.utils.parseEther("1").toString());
     });
 
     it("Adds funder to array of funders", async () => {
       await fundMe.fund({ value: ethers.utils.parseEther("1") });
-      const response = await fundMe.funders(0);
+      const response = await fundMe.s_funders(0);
       assert.equal(response, deployer.address);
     });
   });
@@ -92,10 +92,10 @@ describe("FundME", function () {
       // Assert
       assert.equal(startingFundMeBalance.add(startingDeployerBalance).toString(), endingDeployerBalance.add(withdrawGasCost).toString());
       // Make a getter for storage variables
-      await expect(fundMe.funders(0)).to.be.reverted;
+      await expect(fundMe.s_funders(0)).to.be.reverted;
 
       for (let i = 1; i < 6; i++) {
-        const addressToAmountFundedResponse = await fundMe.addressToAmountFunded(accounts[i].address);
+        const addressToAmountFundedResponse = await fundMe.s_addressToAmountFunded(accounts[i].address);
         assert.equal(addressToAmountFundedResponse.toString(), "0");
       }
     });
